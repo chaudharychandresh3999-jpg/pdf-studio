@@ -1,0 +1,152 @@
+<header class="top gut">
+  <div class="bar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <span>PDF Studio</span>
+    </div>
+    <label class="field"><span class="sr">File name</span><input id="fname" value="document" maxlength="60" autocomplete="off"><span class="ext">.pdf</span></label>
+    <span id="pageinfo" class="pageinfo" aria-live="polite">1 page</span>
+    <button id="btn-dl" class="btn primary" type="button">Download PDF</button>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Tools">
+    <span class="tabind" id="tabind" aria-hidden="true"></span>
+    <button class="tab" role="tab" data-tab="text" aria-selected="true" type="button">Text</button>
+    <button class="tab" role="tab" data-tab="page" aria-selected="false" type="button">Background</button>
+    <button class="tab" role="tab" data-tab="insert" aria-selected="false" type="button">Insert</button>
+    <button class="tab" role="tab" data-tab="draw" aria-selected="false" type="button">Draw</button>
+    <button class="tab" role="tab" data-tab="scan" aria-selected="false" type="button">Scan</button>
+    <button class="tab" role="tab" data-tab="translate" aria-selected="false" type="button">Translate</button>
+  </div>
+
+  <section class="panel" id="panel-text" role="tabpanel">
+    <div class="grp">
+      <select id="fmt" aria-label="Text style"><option value="p">Normal</option><option value="h1">Heading</option><option value="h2">Subheading</option></select>
+      <select id="font" aria-label="Font"><option value="pdfsans">Sans</option><option value="pdfserif">Serif</option><option value="pdfhind">Hind Vadodara</option></select>
+      <select id="size" aria-label="Size"><option value="12">12</option><option value="14">14</option><option value="16" selected>16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option><option value="28">28</option><option value="32">32</option><option value="40">40</option><option value="52">52</option></select>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" data-cmd="bold" aria-label="Bold" aria-pressed="false"><b>B</b></button>
+      <button class="tool" type="button" data-cmd="italic" aria-label="Italic" aria-pressed="false"><i>I</i></button>
+      <button class="tool" type="button" data-cmd="underline" aria-label="Underline" aria-pressed="false"><u>U</u></button>
+      <label class="tool colorbtn" title="Text colour"><b>A</b><i id="fcolor-bar" style="color:#1d2327"></i><input type="color" id="fcolor" value="#1d2327" aria-label="Text colour"></label>
+      <label class="tool colorbtn" title="Highlight"><b>H</b><i id="hcolor-bar" style="color:#fff176"></i><input type="color" id="hcolor" value="#fff176" aria-label="Highlight colour"></label>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" data-cmd="justifyLeft" aria-label="Align left"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg></button>
+      <button class="tool" type="button" data-cmd="justifyCenter" aria-label="Align centre"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg></button>
+      <button class="tool" type="button" data-cmd="justifyRight" aria-label="Align right"><svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg></button>
+      <button class="tool" type="button" data-cmd="justifyFull" aria-label="Justify"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" data-cmd="insertUnorderedList" aria-label="Bullet list">&bull; List</button>
+      <button class="tool" type="button" data-cmd="insertOrderedList" aria-label="Numbered list">1. List</button>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" data-cmd="undo" aria-label="Undo">Undo</button>
+      <button class="tool" type="button" data-cmd="redo" aria-label="Redo">Redo</button>
+      <button class="tool" type="button" data-cmd="removeFormat" aria-label="Clear formatting">Clear</button>
+      <button class="tool" type="button" id="btn-copy" aria-label="Copy">Copy</button>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-page" role="tabpanel" hidden>
+    <div class="grp"><span class="lbl">Colour</span><span id="swatches" style="display:flex;gap:6px"></span>
+      <label class="tool colorbtn" title="Any colour"><b>+</b><i id="bgcolor-bar" style="color:#888"></i><input type="color" id="bgcolor" value="#ffffff" aria-label="Custom background colour"></label>
+    </div>
+    <div class="grp"><span class="lbl">Gradient</span><span id="grads" style="display:flex;gap:6px"></span></div>
+    <div class="grp"><span class="lbl">Photo</span>
+      <label class="tool file">Choose image<input type="file" id="bgfile" accept="image/*"></label>
+      <button class="tool" type="button" id="bg-reset">Reset</button>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-insert" role="tabpanel" hidden>
+    <div class="grp">
+      <label class="tool file">Add image<input type="file" id="imgfile" accept="image/*"></label>
+      <label class="lbl" for="imgw">Image width</label>
+      <input type="range" id="imgw" min="10" max="100" value="60" disabled>
+      <button class="tool" type="button" id="img-del" disabled>Remove image</button>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" id="btn-pb">Page break</button>
+      <button class="tool" type="button" data-cmd="insertHorizontalRule">Divider line</button>
+    </div>
+    <span class="hint">Tap an image in the page to resize it.</span>
+  </section>
+
+  <section class="panel" id="panel-draw" role="tabpanel" hidden>
+    <div class="grp">
+      <button class="tool" type="button" data-tool="pen" aria-pressed="true">Pen</button>
+      <button class="tool" type="button" data-tool="marker" aria-pressed="false">Marker</button>
+      <button class="tool" type="button" data-tool="eraser" aria-pressed="false">Eraser</button>
+      <button class="tool" type="button" data-tool="line" aria-pressed="false">Line</button>
+      <button class="tool" type="button" data-tool="rect" aria-pressed="false">Box</button>
+      <button class="tool" type="button" data-tool="ellipse" aria-pressed="false">Circle</button>
+    </div>
+    <div class="grp"><span class="lbl">Colour</span><span id="inkcolors" style="display:flex;gap:6px"></span>
+      <label class="tool colorbtn" title="Any colour"><b>+</b><i id="inkcolor-bar" style="color:#111111"></i><input type="color" id="inkcolor" value="#111111" aria-label="Pen colour"></label>
+    </div>
+    <div class="grp"><label class="lbl" for="inksize">Size</label><input type="range" id="inksize" min="1" max="24" value="4"><output id="inksize-val" class="lbl">4</output></div>
+    <div class="grp">
+      <button class="tool" type="button" id="ink-undo" disabled>Undo stroke</button>
+      <button class="tool" type="button" id="ink-clear" disabled>Clear drawing</button>
+      <button class="tool" type="button" id="ink-scroll" aria-pressed="false">Scroll page</button>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-scan" role="tabpanel" hidden>
+    <div class="grp">
+      <label class="tool file">Take photo<input type="file" id="scancam" accept="image/*" capture="environment"></label>
+      <label class="tool file">Choose images<input type="file" id="scanfile" accept="image/*" multiple></label>
+    </div>
+    <div class="grp"><label class="lbl" for="scanlang">Write text in</label>
+      <select id="scanlang"><option value="">Same as the image</option><option value="gu">Gujarati</option><option value="hi">Hindi</option><option value="en">English</option></select>
+    </div>
+    <div class="grp"><span class="lbl">Result</span>
+      <button class="tool" type="button" data-smode="add" aria-pressed="true">Add to page</button>
+      <button class="tool" type="button" data-smode="replace" aria-pressed="false">Replace page</button>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" id="s-cancel" hidden>Stop</button>
+      <button class="tool" type="button" id="s-undo" hidden>Undo scan</button>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-translate" role="tabpanel" hidden>
+    <div class="grp"><span class="lbl" id="tscope">Translates the whole page</span></div>
+    <div class="grp">
+      <button class="tool" type="button" data-lang="gu">ગુજરાતી</button>
+      <button class="tool" type="button" data-lang="hi">हिंदी</button>
+      <button class="tool" type="button" data-lang="en">English</button>
+    </div>
+    <div class="grp"><span class="lbl">Result</span>
+      <button class="tool" type="button" data-tmode="replace" aria-pressed="true">Replace</button>
+      <button class="tool" type="button" data-tmode="below" aria-pressed="false">Add below</button>
+    </div>
+    <div class="grp">
+      <button class="tool" type="button" id="t-cancel" hidden>Stop</button>
+      <button class="tool" type="button" id="t-undo" hidden>Undo translation</button>
+    </div>
+  </section>
+</header>
+
+<main class="stage gut" id="stage">
+  <div class="zoomwrap" id="zoomwrap">
+    <div class="sheet" id="sheet">
+      <div class="guides" id="guides" aria-hidden="true"></div>
+      <div class="doc" id="editor" contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true" aria-label="Page text"></div>
+      <canvas class="ink" id="ink" width="1190" height="1684" aria-hidden="true"></canvas>
+    </div>
+  </div>
+</main>
+
+<div class="zoom" role="group" aria-label="Zoom">
+  <button class="tool" type="button" id="z-out" aria-label="Zoom out">&minus;</button>
+  <output id="z-val">100%</output>
+  <button class="tool" type="button" id="z-in" aria-label="Zoom in">+</button>
+  <button class="tool" type="button" id="z-fit">Fit</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

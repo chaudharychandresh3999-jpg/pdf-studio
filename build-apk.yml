@@ -1,0 +1,64 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble the web page
+        run: |
+          mkdir -p app/src/main/assets
+          {
+            printf '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}html{color-scheme:light dark}</style>\n'
+            cat web/1-head.html web/2-body.html
+            echo '<script>'
+            cat web/js/*.js
+            echo '</script>'
+            echo '</body></html>'
+          } > app/src/main/assets/index.html
+
+      - name: Bundle PDF libraries for offline use
+        run: |
+          cd app/src/main/assets
+          if curl -fsSL -o html2canvas.min.js https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js \
+             && curl -fsSL -o jspdf.umd.min.js https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js; then
+            sed -i 's#https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js#html2canvas.min.js#; s#https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js#jspdf.umd.min.js#' index.html
+          else
+            echo "Download failed, the app will load the libraries from the internet"
+            rm -f html2canvas.min.js jspdf.umd.min.js
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build debug APK
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PDF-Studio-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk PDF-Studio.apk
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest PDF-Studio.apk --title "PDF Studio (latest)" --notes "Download PDF-Studio.apk and install it on your Android phone." --target "$GITHUB_SHA"
